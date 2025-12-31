@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DW Digital Clock</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="clock-container">
+      <div class="clock-box">
+        <div id="date" class="date-display">00.00.00 AAA</div>
+        <div id="clock" class="clock-display">
+          <span id="hours">00</span><span class="blink">:</span
+          ><span id="minutes">00</span>
+        </div>
+      </div>
+    </div>
+    <script>
+      const dateElement = document.getElementById("date");
+      const hourElement = document.getElementById("hours");
+      const minuteElement = document.getElementById("minutes");
+
+      let lastDateText = "";
+      let lastHour = "";
+      let lastMinute = "";
+
+      function updateClock() {
+        const now = new Date();
+
+        // 날짜 및 요일 계산
+        const yy = String(now.getFullYear()).slice(-2);
+        const mm = String(now.getMonth() + 1).padStart(2, "0");
+        const dd = String(now.getDate()).padStart(2, "0");
+        const days = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+        const dayText = `${yy}.${mm}.${dd} ${days[now.getDay()]}`;
+
+        // 시/분 계산
+        const h = String(now.getHours()).padStart(2, "0");
+        const m = String(now.getMinutes()).padStart(2, "0");
+
+        // [렌더링 최적화] 값이 바뀔 때만 텍스트 교체
+        if (dayText !== lastDateText) {
+          dateElement.textContent = dayText;
+          lastDateText = dayText;
+        }
+        if (h !== lastHour) {
+          hourElement.textContent = h;
+          lastHour = h;
+        }
+        if (m !== lastMinute) {
+          minuteElement.textContent = m;
+          lastMinute = m;
+        }
+
+        // 다음 프레임 예약
+        requestAnimationFrame(updateClock);
+      }
+
+      // 시작
+      requestAnimationFrame(updateClock);
+    </script>
+  </body>
+</html>
